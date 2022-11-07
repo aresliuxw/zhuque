@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * 自定义线程池测试
  *
@@ -22,6 +24,13 @@ public class ThreadPoolController {
     public void threadPoolTest() {
         for (int i = 0; i < 60; i++) { //线程数多于 配置项里的最大线程数+队列容量 则会触发拒绝策略
             threadPoolService.executeAsync();
+        }
+    }
+
+    @GetMapping("/threadPoolTest2")
+    public void threadPoolTest2(int threadNum) throws ExecutionException, InterruptedException {
+        for (int i = 0; i < threadNum; i++) { //线程数多于 配置项里的最大线程数+队列容量 则会触发拒绝策略
+            threadPoolService.executeTest();
         }
     }
 
