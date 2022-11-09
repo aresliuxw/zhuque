@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/public/layui/css/layui.css" media="all">
+    <script type="text/javascript" src="/public/easyui/jquery-1.8.0.min.js"> </script>
+    <script type="text/javascript" src="/public/layui/layui.js"></script>
+    <!--common.js需先于ajaxSet.js引用-->
+    <script type="text/javascript" src="/js/common.js"></script>
+    <script type="text/javascript" src="/js/ajaxSet.js"></script>
+
+    <script type="text/javascript" src="/js/userInfo.js"></script>
+    <title>Index</title>
+</head>
+<body>
+    <div class="layui-container">
+        <div class="layui-row headpic-row">
+            <a href="javascript:;" id="atip"><img id="user-info-headpic" class="layui-nav-img" title="点击上传头像,图片大小不能超过500KB" src="/images/head.jpg"></a>
+            <input type="file" name="file"  id="headpic-input-file" style="display: none;"/>
+        </div>
+        <br/>
+        <div class="layui-row">
+            <div class="layui-col-md2">昵称</div>
+            <div class="layui-col-md2"><span id="user-info-nickname"></span></div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md2">年龄</div>
+            <div class="layui-col-md2"><span id="user-info-age"></span></div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md2">性别</div>
+            <div class="layui-col-md2"><span id="user-info-sex"></span></div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md2">手机</div>
+            <div class="layui-col-md2"><span id="user-info-phone"></span></div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md2">邮箱</div>
+            <div class="layui-col-md2"><span id="user-info-email"></span></div>
+        </div>
+    </div>
+</body>
+
+<style type="text/css">
+    .headpic-row {margin-top: 40%;}
+    .layui-nav-img {width: 100px; height: 100px;}
+    .layui-row {font-family: Arial, 宋体; font-size: medium; margin-top: 20px;}
+</style>
+</html>

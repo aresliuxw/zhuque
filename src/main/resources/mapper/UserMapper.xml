@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.liu.dao.UserMapper">
+
+    <!--根据userId获取用户-->
+    <select id="getUserByAccount" parameterType="String" resultType="com.cn.liu.entity.PUser" >
+      SELECT account as account,
+             nick_name as nickName,
+             password as pwd,
+             sex as sex,
+             mobile as phone
+      FROM p_user u
+      where u.account = #{account}
+            and enable = '1'
+    </select>
+
+    <select id="getAllUserData" parameterType="Integer" resultType="com.cn.liu.entity.PUser" >
+      SELECT account, nick_name as name, mobile as phone
+      FROM p_user ORDER BY id
+    </select>
+
+    <!--新增用户-->
+    <insert id="addUser" parameterType="com.cn.liu.entity.params.PUserVo" >
+        insert into p_user(account,nick_name,password,sex,birth,mobile,email,head_pic,create_time,update_time)
+        values(#{user.account},#{user.nickName},#{user.pwd},#{user.sex},
+              #{user.birthDate},#{user.phone},#{user.email},'/images/head.jpg',#{user.createTime},#{user.updateTime}
+              )
+    </insert>
+
+    <!--删除用户-->
+    <update id="delUser" parameterType="Long">
+        update p_user set enable = '0', update_time = now() where id = #{userId}
+    </update>
+
+    <!--修改用户信息-->
+    <update id="updUser" parameterType="com.cn.liu.entity.PUser" >
+        update p_user
+        set
+        <!--<trim  suffixOverrides="," >
+            <if test="user.pwd != null and user.pwd != ''">
+                pwd = #{user.pwd},
+            </if>
+            <if test="user.nickName != null and user.nickName != ''">
+                nickName = #{user.nickName},
+            </if>
+            <if test="user.sex != null and user.sex != ''">
+                sex = #{user.sex},
+            </if>
+            <if test="user.age != null and user.age != ''">
+                age = #{user.age},
+            </if>
+            <if test="user.phone != null and user.phone != ''">
+                phone = #{user.phone},
+            </if>
+            <if test="user.email != null and user.email != ''">
+                email = #{user.email},
+            </if>
+            <if test="user.enable != null and user.enable != ''">
+                enable = #{user.enable},
+            </if>
+            <if test="user.headPic != null and user.headPic != ''">
+                headPic = #{user.headPic},
+            </if>
+        </trim>-->
+        head_pic = #{user.headPic},
+        update_time = now()
+        where account = #{user.account}
+    </update>
+
+    <!--删除用户角色-->
+    <delete id="delUserRole" parameterType="Long">
+        delete from p_userrole where userId = #{userId}
+    </delete>
+
+    <!--检验用户是否已存在-->
+    <select id="chkUserExist" parameterType="com.cn.liu.entity.params.PUserVo" resultType="com.cn.liu.entity.PUser">
+        select account from p_user where account = #{user.account} and enable = '1'
+    </select>
+
+    <!--检验手机号是否已存在-->
+    <select id="chkPhoneExist" parameterType="com.cn.liu.entity.params.PUserVo" resultType="com.cn.liu.entity.PUser">
+        select mobile as phone from p_user where mobile = #{user.phone} and enable = '1'
+    </select>
+
+    <!--获取用户角色-->
+    <select id="getUserRole" parameterType="com.cn.liu.entity.params.PUserRoleVo"
+            resultType="com.cn.liu.entity.Prole">
+        select r.id, r.role_code as roleCode, r.role_name as roleName, r.role_desc as roleDesc,
+               case when ur.userId is null or ur.userId = '' then '0'
+               else '1'
+               end as related
+        from p_userrole ur right join p_role r
+             on ur.roleId = r.id and ur.userId = #{userRole.id}
+        <where>
+            r.enable = '1'
+            <if test="userRole.roleName != null and userRole.roleName != ''">
+                and r.role_name like concat('%',#{userRole.roleName},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--获取用户列表-->
+    <select id="getUsers" parameterType="com.cn.liu.entity.params.PUserVo"
+            resultType="com.cn.liu.entity.PUser">
+        select id, account, nick_name as nickName, password as pwd, sex, 20 as age, mobile as phone, email, create_time as createTime
+        from p_user u
+        where u.enable = '1'
+        <if test="user.nickName != null and user.nickName != ''">
+            and u.nick_name like concat('%',#{user.nickName},'%')
+        </if>
+        <if test="user.account != null and user.account != ''">
+            and u.account = #{user.account}
+        </if>
+    </select>
+
+    <!--获取用户信息-->
+    <select id="getUserInfo" parameterType="String" resultType="com.cn.liu.entity.PUser">
+        select id, account, nick_name, password, sex, IF(sex = 1,'男','女') as sexTxt,
+               birth as birthDate, mobile, email, head_pic as headPic, create_time as createTime
+        from p_user u where u.enable = '1' and u.account = #{userAccount}
+    </select>
+
+    <!--删除用户角色-->
+    <delete id="deleteUserRoles" parameterType="com.cn.liu.entity.params.PUserRoleVo" >
+        delete from p_userrole where userId = #{param.userId}
+    </delete>
+
+    <!--用户分配角色-->
+    <insert id="addUserRoles" parameterType="com.cn.liu.entity.params.PUserRoleVo" >
+        insert into p_userrole(userId,roleId)
+        values
+        <foreach collection="param.roleIdList" item="roleId" index="index" separator="," >
+            (#{param.userId},#{roleId})
+        </foreach>
+    </insert>
+
+</mapper>

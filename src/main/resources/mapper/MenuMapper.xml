@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.liu.dao.MenuMpper">
+
+    <!--根据菜单id获取子集菜单-->
+    <select id="getSubMenus" parameterType="String" resultType="com.cn.liu.entity.Pmenu" >
+        select distinct m.id,
+                        m.menu_code as menuCode,
+                        m.menu_name as menuName,
+                        m.menu_url as menuUrl,
+                        m.parent_id as parentId,
+                        m.menu_order as menuOrder,
+                        m.menu_lvl as menuLvl,
+                        m.enable
+        from p_userrole ur, p_rolemenu rm, p_menu m
+        where ur.userId = #{userId}
+              and ur.roleId = rm.roleId
+              and rm.menuId = m.id
+              and m.enable = '1'
+              and m.menu_type = '0'
+              and m.parent_id = #{menuId}
+        order by m.menu_order
+    </select>
+
+
+</mapper>

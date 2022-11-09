@@ -1,0 +1,92 @@
+@CHARSET "UTF-8";
+
+body {
+	overflow: auto;
+	background-color: #E9F5F5;
+}
+
+#login {
+	background-color: #C8E4E7;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -406px;
+	margin-top: -300px;
+	height: 600px;
+	width: 812px;
+	text-align: left;
+}
+
+#login h1{
+	 font-size: 14px;
+	 color: #888888;
+}
+
+#top {
+	/* background-image: url(../images/login/top.jpg); */
+	background-repeat: no-repeat;
+	height: 82px;
+}
+
+#body {
+	/* background-image: url(../images/login/body.jpg); */
+	background-repeat: no-repeat;
+	height: 211px;
+	border: 0px solid #000;
+}
+
+#mid {
+	/* background-image: url(../images/login/mid.jpg); */
+	background-repeat: no-repeat;
+	height: 133px;
+	border: 0px solid #000;
+	}
+#dsm_mid {
+	/* background-image: url(../images/login/dsm_mid.jpg); */
+	background-repeat: no-repeat;
+	height: 133px;
+	
+}
+
+#btm {
+	/* background-image: url(../images/login/btm.jpg); */
+	background-repeat: no-repeat;
+	height: 170px;
+	overflow: hidden;
+}
+
+#btm table {
+	height: 166px;
+	float: right;
+	border: 0px solid red;
+}
+
+#downloads {
+	position: absolute;
+	top: 90%;
+	left: 50%;
+	height:20px;
+	width:400px;
+	margin-left: -200px;
+	text-align: center;
+}
+
+#downloads a {
+	margin-top:5px;
+	margin-left:5px;
+	color: #006666;
+}
+
+#info{
+	color: red;
+}
+
+a {
+	text-decoration: none;
+}
+
+.inputText{
+	 font-size: 17;
+	 font-weight: bold;
+	 color: #888888
+}

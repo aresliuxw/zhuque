@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--参照博文：https://blog.csdn.net/u012129558/article/details/79947477 root logger详解-->
+<!--
+    根节点<configuration>包含的属性
+    scan: 当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
+    scanPeriod: 设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。
+    debug: 当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
+    默认情况下此三个属性不写。
+-->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml" />-->
+
+    <!--获取项目名称, 用于命名日志文件名等, spring.application.name表示工程名称-->
+    <springProperty name="appname" scope="context" source="spring.application.name"/>
+
+    <!--
+        <property>用来定义变量值的标签， 有两个属性，name和value；其中name的值是变量的名称，value的值时变量定义的值。
+    -->
+    <!--日志文件主目录：这里/logs为d盘logs里-->
+    <property name="baseHome" value="/logs"/>
+    <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{100} - %msg%n" />
+
+
+    <!--
+        <appender>用来打印日志信息。
+    -->
+    <!--打印到控制台-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- INFO 日志输出-->
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志文件地址-->
+        <file>${baseHome}/info.log</file>
+        <!--滚动策略地址-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${baseHome}/${appname}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!--日志最大保留天数-->
+            <MaxHistory>30</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ERROR日志输出-->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${baseHome}/error.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${baseHome}/${appname}-error.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--
+        <loger>用来设置某一个包或者具体的某一个类的日志打印级别、以及指定<appender>。
+        <loger>仅有一个name属性，一个可选的level和一个可选的addtivity属性。
+        name:用来指定受此loger约束的某一个包或者具体的某一个类。
+        level:用来设置打印级别（日志级别），大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别。
+              如果未设置此level属性，那么当前loger将会继承上级的级别。
+        addtivity:是否向上级loger传递打印信息。默认是true。
+        <loger>可以包含零个或多个<appender-ref>元素，标识这个appender将会添加到这个loger。
+        如果没有设置appender，此loger本身不打印任何信息。
+    -->
+    <logger name="xxxname" level="INFO" addtivity="true"/>
+
+    <logger name="yyyname" level="DEBUG" addtivity="false">
+        <appender-ref ref="INFO" />
+    </logger>
+
+    <!-- 打印sql name为dao所在的包-->
+    <logger name="com.cn.liu.dao" level="INFO" addtivity="true"/>
+
+    <!--
+        <root>也是<loger>元素，但是它是根loger。只有一个level属性，因为已经被命名为"root".
+        level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，不能设置为INHERITED或者同义词NULL。默认是DEBUG。
+        <root>可以包含零个或多个<appender-ref>元素，标识这个appender将会添加到这个loger。
+    -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" /> <!--打印控制台日志-->
+        <appender-ref ref="INFO" />
+        <appender-ref ref="ERROR" />
+    </root>
+</configuration>

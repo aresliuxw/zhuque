@@ -1,0 +1,43 @@
+
+.login-wrap {
+    width: 100vw;
+    height: 100vh;
+    background: url('/images/login2.jpg') no-repeat ;
+    background-size: cover;
+    position: relative;
+}
+
+.login-form {
+    margin-left: 35%;
+    margin-top: 12%;
+    background-color: #FFFFFF;
+    width: 32%;
+    height: 40%;
+    float: left;
+    z-index: 9999;
+    position: fixed;
+    opacity: 0.95;
+    box-shadow: -10px 10px 10px #4E962A;
+    border-radius: 6px;
+}
+
+.layui-input {
+    border-radius: 0.5em;
+}
+
+/*.layui-form-label {
+    font-family:"微软雅黑"
+}*/
+
+.login-input-div {
+    margin-left: 15%;
+}
+
+.login-account-input-item {
+    margin-top: 8%;
+}
+
+.login-submit-btn {
+    width: 100%;
+}
+
