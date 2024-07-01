@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.liu.dao.DemoMpper">
+
+
+    <select id="getByConditions" parameterType="com.cn.liu.entity.PUser" resultType="com.cn.liu.entity.PUser">
+        select account as account, nick_name as nickName
+        from p_user
+        <where>
+            <foreach collection="userVOS" item="user" open="("  close=")" separator=") or (">
+                enable = 1
+                and nick_name = #{user.nickName}
+                and account = #{user.account}
+            </foreach>
+        </where>
+    </select>
+
+
+</mapper>

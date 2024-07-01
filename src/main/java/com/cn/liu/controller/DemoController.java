@@ -1,9 +1,15 @@
 package com.cn.liu.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.cn.liu.entity.PUser;
+import com.cn.liu.service.DemoServiceInf;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 测试
@@ -15,10 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/demo")
 public class DemoController {
 
-    @GetMapping("/test")
-    public String test() {
-        System.out.println("00000");
-        return "succ";
+    @Autowired
+    private DemoServiceInf demoService;
+
+    @GetMapping("/getUsers")
+    public List<PUser> getUsers() {
+
+        return demoService.getUsers();
     }
 
 

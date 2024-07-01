@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -17,7 +18,13 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PUser {
+public class PUser implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    public PUser(String account, String nickName) {
+        this.account = account;
+        this.nickName = nickName;
+    }
 
     //主键id(用户id)
     private Long id;
