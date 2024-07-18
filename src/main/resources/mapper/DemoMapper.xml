@@ -16,5 +16,10 @@
         </where>
     </select>
 
+    <select id="getAllUsers" resultType="com.cn.liu.entity.PUser">
+        select id as id, account as account, nick_name as nickName
+        from ${table}
+    </select>
+
 
 </mapper>

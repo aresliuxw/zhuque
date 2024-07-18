@@ -30,6 +30,14 @@ public class DemoController {
         return demoService.getUsers();
     }
 
+    @GetMapping("/exportUsers")
+    public String exportUsers() {
+
+        demoService.exportUsers();
+
+        return "success";
+    }
+
 
 }
 

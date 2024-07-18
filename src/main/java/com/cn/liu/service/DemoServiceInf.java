@@ -14,6 +14,6 @@ public interface DemoServiceInf {
 
     List<PUser> getUsers();
 
-
+    void exportUsers();
 
 }

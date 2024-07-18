@@ -17,5 +17,8 @@ public interface DemoMpper {
 
     List<PUser> getByConditions(@Param("userVOS") List<PUser> userVOS);
 
+    List<PUser> getAllUsers(@Param("table") String table);
+
+
 
 }
