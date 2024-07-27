@@ -1,17 +1,22 @@
 package com.cn.liu.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.cn.liu.entity.PUser;
+import com.cn.liu.entity.Result;
 import com.cn.liu.service.DemoServiceInf;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -68,6 +73,32 @@ public class DemoController {
         }
 
         return "success";
+    }
+
+    /**
+     * 浏览器下载文件
+     */
+    @GetMapping("/dowmloadFile")
+    public Result<Object> dowmloadFile(HttpServletResponse response, @RequestParam String code) {
+        if (StringUtils.isEmpty(code)) {
+            return Result.builder().code("500").msg("code为空").build();
+        }
+        try (FileInputStream inputStream = new FileInputStream("C:\\Users\\44674\\Desktop\\测试.pdf");
+             ServletOutputStream outputStream = response.getOutputStream();) {
+
+            byte[] bytes = IOUtils.toByteArray(inputStream);
+
+            String fileName = code + ".pdf";
+            response.setContentType("application/octet-stream");
+            response.setContentLength(bytes.length);
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+
+            outputStream.write(bytes);
+            outputStream.flush();
+        } catch (IOException e) {
+            return Result.builder().code("500").msg("系统异常").build();
+        }
+        return Result.builder().code("200").msg("成功").build();
     }
 
     public static void main(String[] args) {
