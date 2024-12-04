@@ -21,5 +21,11 @@
         from ${table}
     </select>
 
+    <insert id="insertUser" parameterType="com.cn.liu.entity.PUser">
+        insert into p_user(account, password, nick_name, mobile, email, create_user, create_time, update_time)
+        values (#{user.account}, #{user.pwd}, #{user.nickName}, #{user.phone},
+                #{user.email}, #{user.createUser}, #{user.createTime}, #{user.updateTime})
+    </insert>
+
 
 </mapper>

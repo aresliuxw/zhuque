@@ -1,9 +1,7 @@
 package com.cn.liu.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,11 +12,12 @@ import java.util.Date;
  * author: lxw
  * time: 2020/8/3 18:50
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PUser implements Serializable {
+public class PUser extends CommonVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public PUser(String account, String nickName) {
@@ -60,10 +59,16 @@ public class PUser implements Serializable {
     private String headPic;
 
     //创建时间
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date createTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
+    private Date updateTime;
 
     //创建人id
     private String createUserId;
+
+    private Long createUser;
 
     //验证码
     private String verifyCode;

@@ -12,8 +12,10 @@ import java.util.List;
  */
 public interface DemoServiceInf {
 
-    List<PUser> getUsers();
+    List<PUser> getUsers(String account);
 
     void exportUsers();
+
+    void insertUser(PUser user);
 
 }

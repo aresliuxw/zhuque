@@ -6,6 +6,7 @@ import com.cn.liu.dao.DemoMpper;
 import com.cn.liu.dao.MenuMpper;
 import com.cn.liu.entity.*;
 import com.cn.liu.service.menu.MenuServiceInf;
+import com.cn.liu.service.user.UserServiceInf;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,14 +34,31 @@ public class DemoServiceImpl implements DemoServiceInf {
     @Autowired
     DemoMpper demoMpper;
 
+    @Resource
+    private UserServiceInf userService;
+
 
     @Override
-    public List<PUser> getUsers() {
+    public void insertUser(PUser user) {
+        demoMpper.insertUser(user);
+
+        PUser userInfo = userService.getUserInfo(user.getAccount());
+        if (Objects.nonNull(userInfo)) {
+            userInfo.setHeadPic("SDFDKFI923IJF");
+            userService.updUser(userInfo);
+        }
+
+        PUser usr = new PUser();
+        BeanUtils.copyProperties(user, usr);
+        System.out.println("service json:===========" + JSON.toJSONString(usr));
+    }
+
+
+    @Override
+    public List<PUser> getUsers(String account) {
         List<PUser> users = new ArrayList<>();
-        PUser u1 = new PUser("lxw","昵称1");
-        PUser u2 = new PUser("zs","昵称2");
+        PUser u1 = new PUser(account,"呵呵");
         users.add(u1);
-        users.add(u2);
         List<PUser> byConditions = demoMpper.getByConditions(users);
         return byConditions;
     }

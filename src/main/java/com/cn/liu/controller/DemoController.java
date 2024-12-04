@@ -1,16 +1,15 @@
 package com.cn.liu.controller;
 
 
+import com.cn.liu.annotation.AddOrder;
+import com.cn.liu.annotation.ParamModify;
 import com.cn.liu.entity.PUser;
 import com.cn.liu.entity.Result;
 import com.cn.liu.service.DemoServiceInf;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -32,10 +31,18 @@ public class DemoController {
     @Autowired
     private DemoServiceInf demoService;
 
-    @GetMapping("/getUsers")
-    public List<PUser> getUsers() {
+    @PostMapping("/insertUser")
+    @ParamModify(fields = {"createUser","updateUser","createDept"}, values = {"1","2","3"})
+    public String insertUser(@RequestBody PUser user) {
+        demoService.insertUser(user);
+        return "success";
+    }
 
-        return demoService.getUsers();
+    @GetMapping("/getUsers")
+    @ParamModify(fields = {"createUser","updateUser","createDept"}, values = {"1","2","3"})
+    public List<PUser> getUsers(@RequestParam String account) {
+
+        return demoService.getUsers(account);
     }
 
     @GetMapping("/exportUsers")
@@ -101,21 +108,25 @@ public class DemoController {
         return Result.builder().code("200").msg("成功").build();
     }
 
+//    public static void main(String[] args) {
+//        String fileUrl = "https://q7.itc.cn/q_70/images03/20240430/cb1a63df65e740a790315fa556761cbe.jpeg";
+//        String outputFilePath = "C:\\Users\\44674\\Desktop\\文件\\666.jpeg";
+//
+//        try (BufferedInputStream in = new BufferedInputStream(new URL(fileUrl).openStream());
+//             FileOutputStream fileOutputStream = new FileOutputStream(outputFilePath)) {
+//
+//            byte[] dataBuffer = new byte[1024];
+//            int bytesRead;
+//            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+//                fileOutputStream.write(dataBuffer, 0, bytesRead);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     public static void main(String[] args) {
-        String fileUrl = "https://q7.itc.cn/q_70/images03/20240430/cb1a63df65e740a790315fa556761cbe.jpeg";
-        String outputFilePath = "C:\\Users\\44674\\Desktop\\文件\\666.jpeg";
 
-        try (BufferedInputStream in = new BufferedInputStream(new URL(fileUrl).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(outputFilePath)) {
-
-            byte[] dataBuffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 

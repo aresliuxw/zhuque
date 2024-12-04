@@ -1,14 +1,23 @@
 package com.cn.liu.controller;
 
 
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import com.alibaba.excel.EasyExcel;
+import com.cn.liu.entity.ImportRequest;
+import com.cn.liu.listener.TestImportListener;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 测试
@@ -93,6 +102,108 @@ public class ExportController {
         }
     }
 
+
+    /**
+     * EasyExcel数据导入
+     * 支持多sheet页
+     */
+    @GetMapping("/importtest")
+    public void importtest() {
+        try {
+            FileInputStream inputStream = new FileInputStream(new File("C:\\Users\\44674\\Desktop\\test\\导入1.xls"));
+            byte[] byteArray = IOUtils.toByteArray(inputStream);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
+
+            TestImportListener testImportListener = new TestImportListener();
+            // 读取所有sheet页
+            EasyExcel.read(byteArrayInputStream, ImportRequest.class, testImportListener).doReadAll();
+
+            List<ImportRequest> dataList = testImportListener.getDataList();
+
+            /*List<ImportRequest> sheet1 = new ArrayList<>();
+            List<ImportRequest> sheet2 = new ArrayList<>();
+            List<ImportRequest> sheet3 = new ArrayList<>();
+            for (ImportRequest importRequest : dataList) {
+                if ("1".equals(importRequest.getType())) {
+                    sheet1.add(importRequest);
+                }
+                if ("2".equals(importRequest.getType())) {
+                    sheet2.add(importRequest);
+                }
+                if ("3".equals(importRequest.getType())) {
+                    sheet3.add(importRequest);
+                }
+            }
+
+            System.out.println(sheet1.size());
+            System.out.println(sheet2.size());
+            System.out.println(sheet3.size());
+            System.out.println(dataList.size());*/
+
+            byteArrayInputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * EasyExcel数据导出
+     * 支持多sheet页
+     */
+    @GetMapping("/exporttest")
+    public void exporttest() {
+        List<ImportRequest> dataList1 = new ArrayList<>();
+        ImportRequest data1 = new ImportRequest();
+        data1.setProjectName("测试测试项目111");
+        data1.setAddress("测试测试地址111");
+        dataList1.add(data1);
+
+        List<ImportRequest> dataList2 = new ArrayList<>();
+        ImportRequest data2 = new ImportRequest();
+        data2.setProjectName("测试测试项目222");
+        data2.setAddress("测试测试地址222");
+        dataList2.add(data2);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (OutputStream os = new BufferedOutputStream(baos);
+             OutputStream os2 = new BufferedOutputStream(baos)) {
+            // 这里注意 有同学反应使用swagger 会导致各种问题，请直接使用获取对象本身不要使用getOutputStream这个方法
+            EasyExcel.write(os, ImportRequest.class).sheet("测试1").doWrite(dataList1);
+            EasyExcel.write(os2, ImportRequest.class).sheet("测试2").doWrite(dataList2);
+
+
+            // 注意这里必须要flush，否则无法读取到内容
+            os.flush();
+            os2.flush();
+            byte[] byteArray = baos.toByteArray();
+            System.out.println(byteArray.length);
+
+
+            File file = new File("C:\\Users\\44674\\Desktop\\test\\导出5.xls");
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(byteArray);
+        } catch (IOException e) {
+            // 处理异常
+            e.printStackTrace();
+        }
+
+//        try (ByteArrayOutputStream baos2 = new ByteArrayOutputStream()) {
+//            EasyExcel.write(baos, ImportRequest.class)
+//                    .sheet("Sheet1") // 创建第一个Sheet
+//                    .doWrite(dataList1); // 写入第一个Sheet的数据
+//
+//            // 开始追加写第二个Sheet
+//            EasyExcel.write(baos, ImportRequest.class, true) // 追加模式
+//                    .sheet("Sheet2") // 创建第二个Sheet
+//                    .doWrite(dataList2); // 写入第二个Sheet的数据
+//
+//            // 注意这里必须要flush，否则无法读取到内容
+//            baos.flush();
+//            byte[] byteArray = baos.toByteArray();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
 
 }
 

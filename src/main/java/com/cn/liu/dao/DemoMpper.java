@@ -19,6 +19,8 @@ public interface DemoMpper {
 
     List<PUser> getAllUsers(@Param("table") String table);
 
+    int insertUser(@Param("user") PUser user);
+
 
 
 }
